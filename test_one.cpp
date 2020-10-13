@@ -4,7 +4,7 @@ int main() {
 	Allocator a;
 	a.makeAllocator(2048);
 	char* pointer = a.alloc(256);
-	if (ponter) {
+	if (pointer) {
 		std::cout << "OK! Allocator returned correct pointer!" << std::endl;
 	}
 	else
