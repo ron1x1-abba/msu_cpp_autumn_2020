@@ -6,7 +6,7 @@ int main()
 	a.makeAllocator(1024);
 	char* ptr1 = a.alloc(45);
 	char* ptr2 = a.alloc(10);
-	if ((pt2 - ptr1) == 45)
+	if ((ptr2 - ptr1) == 45)
 		std::cout << "Numerous allocation works fine!" << std::endl;
 	else
 		std::cout << "Numerous allocation doesn't work!" << std::endl;
