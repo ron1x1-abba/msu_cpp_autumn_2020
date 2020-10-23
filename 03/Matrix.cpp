@@ -1,6 +1,6 @@
 ﻿#include "Matrix.hpp"
 
-Matrix::Matrix(const size_t r, const size_t c) : rows(r), columns(c) { data = new int[rows * columns]; }
+Matrix::Matrix(const size_t r, const size_t c) : rows(r), columns(c) { data = new int[rows * columns]; memset(data, 0, rows*columns*sizeof(int)); }
 
 Matrix::Matrix(const Matrix& a) : rows(a.rows), columns(a.columns) {
 	data = new int[rows * columns];
