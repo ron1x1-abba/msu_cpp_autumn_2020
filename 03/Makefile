@@ -1,11 +1,12 @@
 all:
-test: test_one test_two test_three test_four test_five test_six
+test: test_one test_two test_three test_four test_five test_six test_seven
 	./test_one
 	./test_two
 	./test_three
 	./test_four
 	./test_five
 	./test_six
+	./test_seven
 Matrix.o:
 	g++ -Wall -g -std=c++17 -c -fsanitize=address,undefined Matrix.cpp
 test_one: Matrix.o
@@ -20,5 +21,7 @@ test_five: Matrix.o
 	g++ -Wall -g -std=c++17 -fsanitize=address,undefined test_five.cpp Matrix.o -o test_five
 test_six: Matrix.o
 	g++ -Wall -g -std=c++17 -fsanitize=address,undefined test_six.cpp Matrix.o -o test_six
+test_seven: Matrix.o
+	g++ -Wall -g -std=c++17 -fsanitize=address,undefined test_seven.cpp Matrix.o -o test_seven
 clean:
-	rm *.o test_one test_two test_three test_four test_five test_six
+	rm *.o test_one test_two test_three test_four test_five test_six test_seven
