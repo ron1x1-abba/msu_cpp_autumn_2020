@@ -19,7 +19,7 @@ size_t Matrix::GetColumns() const { return columns; }
 
 size_t Matrix::GetRows() const { return rows; }
 
-//I suppose countdown of rows and columns start with 1
+//I suppose countdown of rows and columns start with 0
 Helper Matrix::operator[](const size_t i) { return Helper(*this, i); }
 
 Helper Matrix::operator[](const size_t i) const { return Helper(*this, i);  }
@@ -28,6 +28,19 @@ Matrix& Matrix::operator*=(const int x) {
 	for (size_t i = 0; i < rows; ++i)
 		for (size_t j = 0; j < columns; ++j)
 			data[i * columns + j] *= x;
+	return *this;
+}
+
+Matrix& Matrix::operator=(const Matrix& a){
+	if(*this != a){
+		delete[] data;
+		rows = a.rows;
+		columns = a.columns;
+		data = new int[rows * columns];
+		for(size_t i = 0; i < a.rows; ++i)
+			for(size_t j = 0; j < a.columns; ++j)
+				data[i*columns + j] = a[i][j];
+	}
 	return *this;
 }
 

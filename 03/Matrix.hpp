@@ -7,8 +7,8 @@
 class Helper;
 
 class Matrix {
-	const size_t rows;
-	const size_t columns;
+	size_t rows;
+	size_t columns;
 	int* data;
 public:
 	Matrix(const size_t r, const size_t c);
@@ -19,6 +19,7 @@ public:
 	Helper operator[](const size_t i);
 	Helper operator[](const size_t i) const;
 	Matrix& operator*=(const int x);
+	Matrix& operator=(const Matrix& a);
 	Matrix operator+(const Matrix& a) const ;
 	bool operator== (const Matrix& a) const;
 	bool operator!= (const Matrix& a) const;
