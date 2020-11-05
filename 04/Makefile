@@ -6,4 +6,4 @@ BigInt.o:
 test_all: BigInt.o
 	g++ -Wall -g -std=c++17 -fsanitize=address,undefined test.cpp BigInt.o -o test_all
 clean:
-	rm *.o test
+	rm *.o test_all
