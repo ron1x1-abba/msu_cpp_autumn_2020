@@ -53,7 +53,15 @@ BigInt::BigInt(const BigInt& a) {
     minus = a.minus;
 }
 
+BigInt::BigInt(BigInt&& a) : _data(a._data), size(a.size), minus(a.minus) {
+    a._data = nullptr;
+    a.size = 0;
+    a.minus = false;
+}
+
 BigInt& BigInt::operator=(const BigInt& a) {
+    if(a == (*this))
+        return *this;
     size = 0;
     if (_data) {
         delete[] _data;
@@ -64,6 +72,22 @@ BigInt& BigInt::operator=(const BigInt& a) {
         _data[i] = a._data[i];
     size = a.size;
     minus = a.minus;
+    return *this;
+}
+
+BigInt& BigInt::operator=(BigInt&& a) {
+    if(&a == this)
+        return *this;
+    size = 0;
+    if (_data) {
+        delete[] _data;
+    }
+    _data = a._data;
+    size = a.size;
+    minus = a.minus;
+    a._data = nullptr;
+    a.size = 0;
+    a.minus = false;
     return *this;
 }
 
@@ -131,7 +155,7 @@ BigInt BigInt::operator+(const BigInt& a) {
                 tmp._data[size] = '\0';
                 ++tmp.size;
                 char* point = new char[tmp.size + 1];
-                strcpy_s(point + 1, tmp.size, tmp._data);
+                strcpy(point + 1, tmp._data);
                 point[0] = '1';
                 delete[] tmp._data;
                 tmp._data = point;
@@ -205,7 +229,7 @@ BigInt BigInt::operator+(const BigInt& a) {
                 tmp._data[0] = '0' + (ptr1[0] - '0' + 1) % 10;
                 ++tmp.size;
                 char* point = new char[tmp.size + 1];
-                strcpy_s(point + 1, tmp.size, tmp._data);
+                strcpy(point + 1, tmp._data);
                 point[0] = '1';
                 delete[] tmp._data;
                 tmp._data = point;
@@ -344,7 +368,7 @@ BigInt BigInt::operator-(const BigInt& a) {
                 if (tmp._data[0] == '0') {
                     --tmp.size;
                     char* point = new char[tmp.size + 1];
-                    strcpy_s(point, tmp.size, tmp._data + 1);
+                    strcpy(point, tmp._data + 1);
                     delete[] tmp._data;
                     tmp._data = point;
                 }
@@ -413,7 +437,7 @@ BigInt BigInt::operator+(const BigInt& a) const {
                 tmp._data[size] = '\0';
                 ++tmp.size;
                 char* point = new char[tmp.size + 1];
-                strcpy_s(point + 1, tmp.size, tmp._data);
+                strcpy(point + 1, tmp._data);
                 point[0] = '1';
                 delete[] tmp._data;
                 tmp._data = point;
@@ -487,7 +511,7 @@ BigInt BigInt::operator+(const BigInt& a) const {
                 tmp._data[0] = '0' + (ptr1[0] - '0' + 1) % 10;
                 ++tmp.size;
                 char* point = new char[tmp.size + 1];
-                strcpy_s(point + 1, tmp.size, tmp._data);
+                strcpy(point + 1, tmp._data);
                 point[0] = '1';
                 delete[] tmp._data;
                 tmp._data = point;
@@ -672,7 +696,7 @@ BigInt BigInt::operator-(const BigInt& a) const {
                 if (tmp._data[0] == '0') {
                     --tmp.size;
                     char* point = new char[tmp.size + 1];
-                    strcpy_s(point, tmp.size, tmp._data + 1);
+                    strcpy(point, tmp._data + 1);
                     delete[] tmp._data;
                     tmp._data = point;
                 }
@@ -774,7 +798,7 @@ BigInt BigInt::operator-(const BigInt& a) const {
     }
 }
 
-BigInt BigInt::operator*(const BigInt& a) {
+BigInt BigInt::operator*(const BigInt& a) const {
     BigInt tmp, tmp1;
     std::string help("0");
     tmp.size = size * a.size;
@@ -848,7 +872,8 @@ BigInt BigInt::operator*(const BigInt& a) {
 
 BigInt BigInt::operator-() const {
     BigInt tmp = (*this);
-    tmp.minus = !tmp.minus;
+    if(!((tmp.size == 1) && (tmp._data[0] == '0')))
+        tmp.minus = !tmp.minus;
     return tmp;
 }
 
@@ -917,10 +942,3 @@ std::ostream& operator<<(std::ostream& s, const BigInt& a) {
 }
 
 size_t BigInt::len() const { return size; }
-
-int main()
-{
-    BigInt a("11");
-    BigInt b("-11");
-    std::cout << (b * a) << std::endl;
-}
