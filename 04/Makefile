@@ -1,4 +1,4 @@
-all:
+all: test
 test: test_all
 	./test_all
 BigInt.o:

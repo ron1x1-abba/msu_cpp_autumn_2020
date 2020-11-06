@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <string>
 #include <string.h>
@@ -9,14 +10,12 @@ class BigInt {
 public:
 	BigInt(); //+
 	BigInt(const std::string& str); //+
-	BigInt(const int& a); //+
+	BigInt(const int a); //+
 	BigInt(const BigInt& a); //+
 	BigInt(BigInt&& a); //+
 	~BigInt(); //+
-	BigInt operator+(const BigInt& a);//+
 	BigInt operator+(const BigInt& a) const; //+
 	BigInt operator*(const BigInt& a) const; //+
-	BigInt operator-(const BigInt& a);//+
 	BigInt operator-(const BigInt& a) const; //+
 	BigInt operator-() const;//+
 	BigInt& operator=(const BigInt& a); //+
