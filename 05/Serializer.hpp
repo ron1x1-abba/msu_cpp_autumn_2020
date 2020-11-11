@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <stdexcept>
 
 enum class Error {
     NoError, CorruptedArchive, Unserializable
@@ -38,7 +39,7 @@ public:
 
     template<typename... ArgsT>
     Error operator()(ArgsT&... args){
-        return (*this).process(args...);
+        return process(args...);
     }
 private:
     template<typename T>
@@ -63,9 +64,9 @@ private:
 
     template<typename T, typename... ArgsT>
     Error process(T& ob, ArgsT&... args){
-        Error err = (*this).help(ob);
+        Error err = help(ob);
         if(err == Error::NoError)
-            return (*this).process(args...);
+            return process(args...);
         else
             return Error::CorruptedArchive;
     }
@@ -91,7 +92,7 @@ public:
 
     template<typename... ArgsT>
     Error operator()(ArgsT&... args){
-        return (*this).process(args...);
+        return process(args...);
     }
 
 private:
@@ -101,9 +102,9 @@ private:
 
     template<typename T, typename... ArgsT>
     Error process(T& ob, ArgsT&... args){
-        Error err = (*this).help(ob);
+        Error err = help(ob);
         if(err == Error::NoError)
-            return (*this).process(args...);
+            return process(args...);
         else
             return Error::CorruptedArchive;
     }
@@ -129,15 +130,23 @@ private:
         else if(IsSame<T, uint64_t>::value) {
             std::string val;
             in_ >> val;
-            if(!val.empty() && (val.find_first_not_of("0123456789") == val.npos)){
-                obj = std::stoul(val);
+            try {
+                size_t amount;
+                obj = std::stoull(val, &amount);
+                if(amount != val.size())
+                    return Error::CorruptedArchive;
             }
-            else
+            catch(std::out_of_range& e) {
+                std::cout << e.what() << std::endl;
                 return Error::CorruptedArchive;
+            }
+            catch(std::invalid_argument& e) {
+                std::cout << e.what() << std::endl;
+                return Error::CorruptedArchive;
+            }
             return Error::NoError;
         }
         else {
-            std::cout << "Wrong" << std::endl;
             return Error::CorruptedArchive;
         }
     }
