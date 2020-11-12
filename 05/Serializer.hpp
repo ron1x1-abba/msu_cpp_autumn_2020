@@ -136,11 +136,7 @@ private:
                 if(amount != val.size())
                     return Error::CorruptedArchive;
             }
-            catch(std::out_of_range& e) {
-                std::cout << e.what() << std::endl;
-                return Error::CorruptedArchive;
-            }
-            catch(std::invalid_argument& e) {
+            catch(const std::logic_error& e) {
                 std::cout << e.what() << std::endl;
                 return Error::CorruptedArchive;
             }
