@@ -13,20 +13,10 @@ public:
     FormatError(const std::string& str, size_t p) : pos(p), err(str) {}
     ~FormatError() = default;
     FormatError() = default;
-    FormatError(const FormatError& a) : pos(a.pos), err(a.err) {}
 
-    bool operator==(const FormatError& a) {
-        if((a.err == err) && (pos == a.pos))
-            return true;
-        else
-            return false;
-    }
+    FormatError(const FormatError&) = default;
 
-    FormatError& operator=(const FormatError& a) {
-        if((*this) == a)
-            return (*this);
-        ;
-    }
+    FormatError& operator=(const FormatError&) = default;
 
     size_t get_pos() const { return pos; }
 
@@ -43,10 +33,10 @@ std::string toStr(const T& obj) {
 }
 
 template<typename... ArgsT>
-std::string format(const std::string& s, ArgsT... args) {
+std::string format(const std::string& s, const ArgsT&... args) {
     if(s.empty())
         return s;
-    std::vector<std::string> arguments = {toStr(std::forward<ArgsT>(args))...};
+    std::vector<std::string> arguments = {toStr(args)...};
     char c;
     std::string out;
     size_t start;
@@ -75,11 +65,10 @@ std::string format(const std::string& s, ArgsT... args) {
                         num = std::stoul(val);
                     }
                     catch (const std::logic_error& e) {
-                        std::cout << e.what() << std::endl;
-                        return s;
+                        throw FormatError(e.what(), start + 1);
                     }
                     if(num > arguments.size() - 1)
-                        throw FormatError("value inside brackets is more than amount of params!", start);
+                        throw FormatError("value inside brackets is more than amount of params!", start + 1);
                     else {
                         out += arguments[num];
                         continue;

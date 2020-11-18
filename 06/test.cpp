@@ -46,6 +46,16 @@ int main() {
     assert(text == "2");
     caught = false;
 
+    try {
+        text = format("{1000000000000000000000}", 2);
+    }
+    catch (const FormatError& e) {
+        caught = true;
+    }
+    assert(caught == true);
+    assert(text == "2");
+    caught = false;
+
     text = format("{}", 2);
     assert(text == "2");
 
