@@ -32,9 +32,6 @@ public:
     void construct(pointer ptr, Args&&... args) {
         ::new((void *)ptr) value_type(std::forward<Args>(args)...);
     }
-    /*void construct(pointer ptr, const_reference val) {
-        new(ptr) value_type(val);
-    }*/
 
     void destroy(pointer ptr) {
         ptr->~value_type();
@@ -233,7 +230,7 @@ public:
     reference emplace_back(Args&&... args) {
         if(size_ == capacity_)
             reserve(2 * capacity_);
-        allocator.construct((ptr + (size_++)), value_type(std::forward<Args>(args)...));
+        allocator.construct((ptr + (size_++)), std::forward<Args>(args)...);
         return *(ptr + size_ - 1);
     }
 
@@ -242,7 +239,7 @@ public:
             return;
         pointer tmp = allocator.allocate(new_cap);
         for(size_t i = 0; i < size_; ++i)
-            allocator.construct(tmp + i, *(ptr + i));
+            allocator.construct(tmp + i, std::move(*(ptr + i)));
         for(size_t i = 0; i < size_; ++i)
             allocator.destroy(ptr + i);
         allocator.deallocate(ptr);
