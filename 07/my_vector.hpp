@@ -200,7 +200,7 @@ public:
         a.size_ = 0;
     }
 
-    Vector& operator=(Vector&& a) {
+    Vector& operator=(Vector&& a) noexcept {
         if(this == &a)
             return (*this);
         for(size_t i = 0; i < size_; ++i) {
