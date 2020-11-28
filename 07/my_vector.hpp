@@ -12,6 +12,9 @@ class Allocator {
 
 public:
     Allocator() = default;
+    Allocator(Allocator&&) = default;
+    Allocator& operator=(const Allocator&) = default;
+    Allocator& operator=(Allocator&&) = default;
     ~Allocator() = default;
 
     pointer allocate(size_t n) {
@@ -174,9 +177,11 @@ public:
     }
 
     ~Vector() {
-        for(size_t i = 0; i < size_; ++i)
-            allocator.destroy(ptr + i);
-        allocator.deallocate(ptr);
+        if (ptr != nullptr) {
+            for(size_t i = 0; i < size_; ++i)
+                allocator.destroy(ptr + i);
+            allocator.deallocate(ptr);
+        }
     }
 
     Vector(const Vector& a) {
@@ -187,6 +192,28 @@ public:
         for(size_t i = 0; i < a.size_; ++i) {
             allocator.construct(ptr + i, *(a.ptr + i));
         }
+    }
+
+    Vector( Vector&& a) noexcept : size_(std::move(a.size_)), capacity_(std::move(a.capacity_)), allocator(std::move(a.allocator)) {
+        ptr = a.ptr;
+        a.ptr = nullptr;
+        a.size_ = 0;
+    }
+
+    Vector& operator=(Vector&& a) {
+        if(this == &a)
+            return (*this);
+        for(size_t i = 0; i < size_; ++i) {
+            allocator.destroy(ptr + i);
+        }
+        allocator.deallocate(ptr);
+        size_ = std::move(a.size_);
+        capacity_ = a.capacity_;
+        allocator = std::move(a.allocator);
+        ptr = a.ptr;
+        a.ptr = nullptr;
+        a.size_ = 0;
+        return (*this);
     }
 
     Vector& operator=(const Vector& a) {

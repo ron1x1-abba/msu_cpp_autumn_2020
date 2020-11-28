@@ -72,6 +72,10 @@ int main() {
     Vector<President> reElections;
     std::cout << "\npush_back:\n";
     reElections.push_back(President("Franklin Delano Roosevelt", "the USA", 1936));
+    Vector<int> b;
+    b = std::move(a);
+    assert(b[1] == 1);
+    assert(a.empty() == true);
     //end of vector assertion
     std::cout << "Done" << std::endl;
     return 0;
